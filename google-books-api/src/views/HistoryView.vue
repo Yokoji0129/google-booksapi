@@ -17,8 +17,6 @@ const allRemoveBook = (i) => {
 // アプリケーション起動時にローカルストレージから検索履歴を読み込む
 onMounted(() => {
   savedBooks.value = JSON.parse(localStorage.getItem("savedBooks"));
-  // 検索語履歴を上から新しい順にする
-  savedBooks.value.reverse();
 });
 </script>
 

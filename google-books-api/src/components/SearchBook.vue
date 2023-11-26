@@ -1,23 +1,12 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
 const searchWord = ref(""); // ユーザーの検索語
 const books = ref([]); // 本の情報を入れる配列
 const bookExplanations = ref([]); // 本の説明を配列で管理
 const bookExplanationInOut = ref(false); // 本の説明表示を管理
 const savedBooks = ref([]); // 検索語格納(検索履歴)
-
-// ローカルストレージから検索語履歴を読み込む
-const loadSavedBooks = () => {
-  const storedBooks = localStorage.getItem("savedBooks");
-  savedBooks.value = storedBooks ? JSON.parse(storedBooks) : [];
-};
-
-onMounted(() => {
-  // コンポーネントがマウントされたときにローカルストレージから読み込む
-  loadSavedBooks();
-});
 
 // 本の検索メソッド
 const searchBooks = () => {
@@ -47,11 +36,11 @@ const searchBooks = () => {
       // 検索結果が変更されたら、説明を初期化
       bookExplanations.value = Array(books.value.length);
 
+      // 検索語を保存
       if (searchWord.value) {
-        // 検索語を保存
-        savedBooks.value.unshift(searchWord.value);
+        savedBooks.value.unshift(searchWord.value); // 検索語を先頭に追加
         localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
-        searchWord.value = "";
+        searchWord.value = ""; // 検索ボタン二度押し防止
       }
     })
     .catch((error) => {
