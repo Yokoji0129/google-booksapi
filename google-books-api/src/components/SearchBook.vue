@@ -1,18 +1,31 @@
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
-const searchWord = ref("");
+const searchWord = ref(""); // ユーザーの検索語
 const books = ref([]); // 本の情報を入れる配列
 const bookExplanations = ref([]); // 本の説明を配列で管理
 const bookExplanationInOut = ref(false); // 本の説明表示を管理
+const savedBooks = ref([]); // 検索語格納(検索履歴)
 
+// ローカルストレージから検索語履歴を読み込む
+const loadSavedBooks = () => {
+  const storedBooks = localStorage.getItem("savedBooks");
+  savedBooks.value = storedBooks ? JSON.parse(storedBooks) : [];
+};
+
+onMounted(() => {
+  // コンポーネントがマウントされたときにローカルストレージから読み込む
+  loadSavedBooks();
+});
+
+// 本の検索メソッド
 const searchBooks = () => {
   axios
     .get("https://www.googleapis.com/books/v1/volumes", {
       params: {
         q: searchWord.value,
-        maxResults: 5, // 本の表示数
+        maxResults: 1, // 本の表示数
       },
     })
     .then((response) => {
@@ -33,12 +46,20 @@ const searchBooks = () => {
 
       // 検索結果が変更されたら、説明を初期化
       bookExplanations.value = Array(books.value.length);
+
+      if (searchWord.value) {
+        // 検索語を保存
+        savedBooks.value.unshift(searchWord.value);
+        localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
+        searchWord.value = "";
+      }
     })
     .catch((error) => {
       window.alert("文字を入力してください:", error);
     });
 };
 
+//本の説明メソッド
 const toggleDescription = (index) => {
   // クリックされた本の説明の表示・非表示を切り替え
   bookExplanationInOut.value = !bookExplanationInOut.value;
@@ -52,6 +73,7 @@ const toggleDescription = (index) => {
   }
 };
 </script>
+
 <template>
   <header id="top">
     <nav>
@@ -71,6 +93,8 @@ const toggleDescription = (index) => {
         <button class="title_btn" @click="searchBooks()">検索</button>
       </label>
     </div>
+    <!--本が表示されていないときに表示-->
+    <h1 class="book-attention" v-if="books < 1">本を検索してください</h1>
     <ul>
       <li class="container" v-for="(book, i) in books" :key="i">
         <div class="text">
@@ -92,4 +116,14 @@ const toggleDescription = (index) => {
       </li>
     </ul>
   </main>
+  <!-- 検索履歴の表示 -->
+  <ul>
+    <li v-for="(historyItem, i) in searchHistory" :key="i">
+      {{ historyItem }}
+    </li>
+  </ul>
 </template>
+
+<style scoped>
+
+</style>

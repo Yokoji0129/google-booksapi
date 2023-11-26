@@ -19,6 +19,11 @@ ul {
     padding: 0;
 }
 
+.book-attention {
+    background-color: rgb(226, 202, 148);
+    text-align: center;
+}
+
 .cp_iptxt {
     position: relative;
     width: 80%;
