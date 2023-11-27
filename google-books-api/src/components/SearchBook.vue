@@ -7,6 +7,8 @@ const books = ref([]); // 本の情報を入れる配列
 const bookExplanations = ref([]); // 本の説明を配列で管理
 const bookExplanationInOut = ref(false); // 本の説明表示を管理
 const savedBooks = ref([]); // 検索語格納(検索履歴)
+const savedDays = ref([]) // 検索したときの日時を格納
+const day = new Date()
 
 // 本の検索メソッド
 const searchBooks = () => {
@@ -36,10 +38,13 @@ const searchBooks = () => {
       // 検索結果が変更されたら、説明を初期化
       bookExplanations.value = Array(books.value.length);
 
-      // 検索語を保存
-      if (searchWord.value) {
-        savedBooks.value.unshift(searchWord.value); // 検索語を先頭に追加
+      // 検索語が空の時以外の時に保存
+      if (searchWord.value.trim()) {
+         // 検索語を先頭に追加
+        savedBooks.value.unshift(searchWord.value);
+        savedDays.value.unshift(day.getFullYear() + '/' + (day.getMonth() + 1) + '/' + day.getDate() + '/' + day.getHours() + ':' + day.getMinutes())
         localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
+        localStorage.setItem("savedDays", JSON.stringify(savedDays.value));
         searchWord.value = ""; // 検索ボタン二度押し防止
       }
     })
@@ -83,7 +88,7 @@ const toggleDescription = (index) => {
       </label>
     </div>
     <!--本が表示されていないときに表示-->
-    <h1 class="book-attention" v-if="books < 1">本を検索してください</h1>
+    <h1 class="book-attention" v-if="books.length === 0">本を検索してください</h1>
     <ul>
       <li class="container" v-for="(book, i) in books" :key="i">
         <div class="text">
@@ -105,12 +110,6 @@ const toggleDescription = (index) => {
       </li>
     </ul>
   </main>
-  <!-- 検索履歴の表示 -->
-  <ul>
-    <li v-for="(historyItem, i) in searchHistory" :key="i">
-      {{ historyItem }}
-    </li>
-  </ul>
 </template>
 
 <style scoped>

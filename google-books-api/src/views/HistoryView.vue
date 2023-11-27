@@ -1,22 +1,28 @@
 <script setup>
 import { ref, onMounted } from "vue";
-const savedBooks = ref([]);// 検索した文字の中身
+const savedBooks = ref([]); // 検索した文字の中身
+const savedDays = ref([]);
 
 // 履歴を一つずつ消すメソッド
 const removeBook = (i) => {
   savedBooks.value.splice(i, 1);
+  savedDays.value.splice(i, 1);
   localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
+  localStorage.setItem("savedDays", JSON.stringify(savedDays.value));
 };
 
 // 履歴全部消すメソッド
 const allRemoveBook = (i) => {
   savedBooks.value.splice(i);
+  savedDays.value.splice(i);
   localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
+  localStorage.setItem("savedDays", JSON.stringify(savedDays.value));
 };
 
 // アプリケーション起動時にローカルストレージから検索履歴を読み込む
 onMounted(() => {
   savedBooks.value = JSON.parse(localStorage.getItem("savedBooks"));
+  savedDays.value = JSON.parse(localStorage.getItem("savedDays"));
 });
 </script>
 
@@ -38,10 +44,8 @@ onMounted(() => {
     <button @click="allRemoveBook(i)">履歴を全て消す</button>
     <ul class="ul">
       <li v-for="(bookName, i) in savedBooks" :key="i">
-        <span>
-          <button class="btn_delete" @click="removeBook(i)">削除</button>
-        </span>
-        {{ bookName }}
+        <button class="btn_delete" @click="removeBook(i)">削除</button>
+        {{ savedDays[i] }} --- {{ bookName }}
       </li>
     </ul>
   </main>
@@ -56,8 +60,7 @@ h1 {
   padding: 0;
 }
 
-.ul li,
-ol li {
+.ul li {
   color: #404040;
   border-left: solid 6px rgb(163, 101, 8);
   background-color: #ffffff;
@@ -68,5 +71,11 @@ ol li {
   font-weight: bold;
   box-shadow: 1px 1px 1px gray;
   border-radius: 0 10px 10px 0;
+  width: 100%; /* 横幅を100%に設定 */
+  box-sizing: border-box; /* ボーダーボックスモデルを使用して幅の計算を行う */
+}
+
+.btn_delete {
+  margin-left: auto; /* ボタンを右端に寄せる */
 }
 </style>
