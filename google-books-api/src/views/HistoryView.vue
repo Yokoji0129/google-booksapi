@@ -13,10 +13,13 @@ const removeBook = (i) => {
 
 // 履歴全部消すメソッド
 const allRemoveBook = (i) => {
-  savedBooks.value.splice(i);
-  savedDays.value.splice(i);
-  localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
-  localStorage.setItem("savedDays", JSON.stringify(savedDays.value));
+  const confirmation = window.confirm("本当に全て削除しますか？");
+  if (confirmation) {
+    savedBooks.value = [];
+    savedDays.value = [];
+    localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
+    localStorage.setItem("savedDays", JSON.stringify(savedDays.value));
+  }
 };
 
 // アプリケーション起動時にローカルストレージから検索履歴を読み込む
@@ -41,7 +44,7 @@ onMounted(() => {
 
   <main>
     <h1>検索履歴一覧</h1>
-    <button @click="allRemoveBook(i)">履歴を全て消す</button>
+    <button class="alldelete" @click="allRemoveBook(i)">履歴を全て消す</button>
     <ul class="ul">
       <li v-for="(bookName, i) in savedBooks" :key="i">
         <button class="btn_delete" @click="removeBook(i)">削除</button>
@@ -76,6 +79,28 @@ h1 {
 }
 
 .btn_delete {
-  margin-left: auto; /* ボタンを右端に寄せる */
+  margin: 0 10px 0 0;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: rgb(229, 89, 50);
+  padding: 5px 10px;
+  box-shadow: 2px 2px 4px gray;
+  cursor: pointer;
+}
+
+.btn_delete:hover {
+  background-color: rgb(163, 73, 48);
+}
+
+.alldelete {
+  border: none;
+  padding: 5px 15px;
+  background-color: rgb(30, 162, 239);
+}
+
+.alldelete:hover {
+  background-color: rgb(29, 122, 176);
 }
 </style>
