@@ -3,12 +3,13 @@ import booksSearch from "../store/index";
 
 // 分割代入で関数定義
 const {
-  searchBooks,
   searchWord,
   books,
-  toggleDescription,
   bookExplanationInOut,
   bookExplanations,
+  searchBooks,
+  toggleDescription,
+  addFavorite
 } = booksSearch();
 </script>
 
@@ -42,7 +43,9 @@ const {
           <p v-if="book.authors">著者: {{ book.authors.join(", ") }}</p>
           <p v-if="book.publishedDate">出版日: {{ book.publishedDate }}</p>
           <p v-if="book.pageCount">ページ: {{ book.pageCount }}</p>
+          <!--本の説明-->
           <button class="btn" @click="toggleDescription(i)">本の説明</button>
+          <button class="btn-favorite" @click="addFavorite(i)">お気に入り保存</button>
           <p
             class="explanation"
             v-if="bookExplanationInOut && bookExplanations[i]"
@@ -50,6 +53,7 @@ const {
             {{ bookExplanations[i] }}
           </p>
         </div>
+        <!--本の画像-->
         <div class="image">
           <img :src="book.thumbnail" />
         </div>
@@ -57,6 +61,3 @@ const {
     </ul>
   </main>
 </template>
-
-<style scoped>
-</style>

@@ -1,15 +1,16 @@
 <script setup>
 import { onMounted } from "vue";
-import booksSave from "../store/index";
+import booksSaveWord from "../store/index";
 
 // 分割代入で関数定義
-const { savedBooks, savedDays } = booksSave();
+const { savedBooksWord, savedDays } = booksSaveWord();
 
 // 履歴を一つずつ消すメソッド
 const removeBook = (i) => {
-  savedBooks.value.splice(i, 1);
+  // savedBooksWordとsavedDaysを空にする
+  savedBooksWord.value.splice(i, 1);
   savedDays.value.splice(i, 1);
-  localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
+  localStorage.setItem("savedBooksWord", JSON.stringify(savedBooksWord.value));
   localStorage.setItem("savedDays", JSON.stringify(savedDays.value));
 };
 
@@ -17,24 +18,29 @@ const removeBook = (i) => {
 const allRemoveBook = () => {
   const confirmation = window.confirm("本当に全て削除しますか？");
   if (confirmation) {
-    savedBooks.value = [];
+    // savedBooksWordとsavedDaysを空にする
+    savedBooksWord.value = [];
     savedDays.value = [];
-    localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
+    localStorage.setItem(
+      "savedBooksWord",
+      JSON.stringify(savedBooksWord.value)
+    );
     localStorage.setItem("savedDays", JSON.stringify(savedDays.value));
   }
 };
 
 // アプリケーション起動時にローカルストレージから検索履歴を読み込む
 onMounted(() => {
-  savedBooks.value = JSON.parse(localStorage.getItem("savedBooks"));
-  savedDays.value = JSON.parse(localStorage.getItem("savedDays"));
+  savedBooksWord.value =
+    JSON.parse(localStorage.getItem("savedBooksWord")) || [];
+  savedDays.value = JSON.parse(localStorage.getItem("savedDays")) || [];
 });
 </script>
 
 <template>
   <header id="top">
     <nav>
-      <h2>検索履歴一覧</h2>
+      <h2>検索履歴一覧({{ savedBooksWord.length }}件)</h2>
       <ul>
         <li><router-link to="/">書籍検索</router-link></li>
         <li><router-link to="/favorite">お気に入り</router-link></li>
@@ -45,16 +51,20 @@ onMounted(() => {
   </header>
 
   <main>
-    <h1>検索履歴一覧</h1>
+    <h1 class="h1">検索履歴一覧</h1>
+    <!--検索履歴がないときに表示-->
+    <h1 class="book-attention" v-if="savedBooksWord.length === 0">
+      検索履歴は0です
+    </h1>
     <button
       class="alldelete"
       @click="allRemoveBook()"
-      v-if="savedBooks.length > 0"
+      v-if="savedBooksWord.length > 0"
     >
       履歴を全て消す
     </button>
     <ul class="ul">
-      <li v-for="(bookName, i) in savedBooks" :key="i">
+      <li v-for="(bookName, i) in savedBooksWord" :key="i">
         <button class="btn_delete" @click="removeBook(i)">削除</button>
         {{ savedDays[i] }} --- {{ bookName }}
       </li>
@@ -63,7 +73,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-h1 {
+.h1 {
   border-bottom: 2px solid rgb(163, 101, 8);
   color: #ffffff;
 }

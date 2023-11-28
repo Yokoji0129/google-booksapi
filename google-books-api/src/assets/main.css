@@ -141,6 +141,29 @@ img {
     padding: 5px 10px;
     box-shadow: 2px 2px 4px gray;
     cursor: pointer;
+    margin: 0 10px 0 0;
+}
+
+.btn-favorite {
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: rgb(98, 210, 60);
+    padding: 5px 10px;
+    box-shadow: 2px 2px 4px gray;
+    cursor: pointer;
+}
+
+.btn-favorite-out {
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: rgb(210, 103, 60);
+    padding: 5px 10px;
+    box-shadow: 2px 2px 4px gray;
+    cursor: pointer;
 }
 
 .title_btn {
