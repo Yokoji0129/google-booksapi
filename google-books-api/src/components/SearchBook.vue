@@ -1,71 +1,15 @@
 <script setup>
-import axios from "axios";
-import { ref } from "vue";
+import booksSearch from "../store/index";
 
-const searchWord = ref(""); // ユーザーの検索語
-const books = ref([]); // 本の情報を入れる配列
-const bookExplanations = ref([]); // 本の説明を配列で管理
-const bookExplanationInOut = ref(false); // 本の説明表示を管理
-const savedBooks = ref([]); // 検索語格納(検索履歴)
-const savedDays = ref([]) // 検索したときの日時を格納
-const day = new Date()
-
-// 本の検索メソッド
-const searchBooks = () => {
-  axios
-    .get("https://www.googleapis.com/books/v1/volumes", {
-      params: {
-        q: searchWord.value,
-        maxResults: 1, // 本の表示数
-      },
-    })
-    .then((response) => {
-      books.value = response.data.items.map((item) => ({
-        //画像
-        thumbnail: item.volumeInfo.imageLinks.thumbnail,
-        //本のタイトル
-        title: item.volumeInfo.title,
-        //本の著者
-        authors: item.volumeInfo.authors,
-        //本の出版日
-        publishedDate: item.volumeInfo.publishedDate,
-        //本の説明
-        description: item.volumeInfo.description,
-        //本のページ数
-        pageCount: item.volumeInfo.pageCount,
-      }));
-
-      // 検索結果が変更されたら、説明を初期化
-      bookExplanations.value = Array(books.value.length);
-
-      // 検索語が空の時以外の時に保存
-      if (searchWord.value.trim()) {
-         // 検索語を先頭に追加
-        savedBooks.value.unshift(searchWord.value);
-        savedDays.value.unshift(day.getFullYear() + '/' + (day.getMonth() + 1) + '/' + day.getDate() + '/' + day.getHours() + ':' + day.getMinutes())
-        localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
-        localStorage.setItem("savedDays", JSON.stringify(savedDays.value));
-        searchWord.value = ""; // 検索ボタン二度押し防止
-      }
-    })
-    .catch((error) => {
-      window.alert("文字を入力してください:", error);
-    });
-};
-
-//本の説明メソッド
-const toggleDescription = (index) => {
-  // クリックされた本の説明の表示・非表示を切り替え
-  bookExplanationInOut.value = !bookExplanationInOut.value;
-
-  if (bookExplanationInOut.value) {
-    // 詳細を表示する場合、クリックされた本の説明をセット
-    bookExplanations.value[index] = books.value[index].description;
-  } else {
-    // 非表示にする場合、全ての本の説明をクリア
-    bookExplanations.value = Array(books.value.length);
-  }
-};
+// 分割代入で関数定義
+const {
+  searchBooks,
+  searchWord,
+  books,
+  toggleDescription,
+  bookExplanationInOut,
+  bookExplanations,
+} = booksSearch();
 </script>
 
 <template>
@@ -88,7 +32,9 @@ const toggleDescription = (index) => {
       </label>
     </div>
     <!--本が表示されていないときに表示-->
-    <h1 class="book-attention" v-if="books.length === 0">本を検索してください</h1>
+    <h1 class="book-attention" v-if="books.length === 0">
+      本を検索してください
+    </h1>
     <ul>
       <li class="container" v-for="(book, i) in books" :key="i">
         <div class="text">
@@ -113,5 +59,4 @@ const toggleDescription = (index) => {
 </template>
 
 <style scoped>
-
 </style>
