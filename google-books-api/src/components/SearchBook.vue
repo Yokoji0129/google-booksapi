@@ -50,7 +50,7 @@ const {
             class="explanation"
             v-if="bookExplanationInOut && bookExplanations[i]"
           >
-            {{ bookExplanations[i] }}
+            {{ book.description }}
           </p>
         </div>
         <!--本の画像-->

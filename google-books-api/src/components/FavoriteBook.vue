@@ -7,7 +7,7 @@ const {
   savedBooks,
   bookExplanationInOut,
   bookExplanations,
-  toggleDescription,
+  toggleDescriptionFavorite,
 } = booksSave();
 
 // アプリケーション起動時にローカルストレージから検索履歴を読み込む
@@ -48,13 +48,13 @@ onMounted(() => {
           <p v-if="book.publishedDate">出版日: {{ book.publishedDate }}</p>
           <p v-if="book.pageCount">ページ: {{ book.pageCount }}</p>
           <!--本の説明-->
-          <button class="btn" @click="toggleDescription(i)">本の説明</button>
+          <button class="btn" @click="toggleDescriptionFavorite(i)">本の説明</button>
           <button class="btn-favorite-out">お気に入りから削除</button>
           <p
             class="explanation"
             v-if="bookExplanationInOut && bookExplanations[i]"
           >
-            {{ bookExplanations[i] }}
+            {{ book.description }}
           </p>
         </div>
         <!--本の画像-->

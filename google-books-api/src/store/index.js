@@ -17,7 +17,7 @@ export default function () {
             .get("https://www.googleapis.com/books/v1/volumes", {
                 params: {
                     q: searchWord.value,
-                    maxResults: 1, // 本の表示数
+                    maxResults: 5, // 本の表示数
                 },
             })
             .then((response) => {
@@ -57,13 +57,14 @@ export default function () {
             });
     }
 
-    // お気に入りに本を追加するメソッド
+
+    // お気に入り追加メソッド
     const addFavorite = (index) => {
         const selectedBook = books.value[index];
 
         // 既存のデータを取得
-        const exisitingBooks = JSON.parse(localStorage.getItem("savedBooks")) || [];
-        savedBooks.value = exisitingBooks;
+        const existingBooks = JSON.parse(localStorage.getItem("savedBooks")) || [];
+        savedBooks.value = existingBooks;
 
         // 同じ本が既にお気に入りに存在するか本のタイトルで比較して確認
         const isAlreadyFavorite = savedBooks.value.some((book) => {
@@ -72,7 +73,9 @@ export default function () {
 
         // 本が入っていない場合追加
         if (!isAlreadyFavorite) {
-            savedBooks.value.unshift(selectedBook);
+            // 本の説明を含めて保存
+            const bookToAdd = { ...selectedBook, description: selectedBook.description || "" };
+            savedBooks.value.unshift(bookToAdd);
             localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
         }
         // 同じ本を追加しようとした場合
@@ -81,17 +84,23 @@ export default function () {
         }
     }
 
-
-
-
-
-
-    // 本の説明メソッド
+    // 本の説明メソッド(本検索ページ部分)
     const toggleDescription = (index) => {
         bookExplanationInOut[index] = !bookExplanationInOut[index];
 
         if (bookExplanationInOut[index]) {
             bookExplanations.value[index] = books.value[index].description;
+        } else {
+            bookExplanations.value[index] = '';
+        }
+    };
+
+    // 本の説明メソッド(お気に入り一覧ページ部分)
+    const toggleDescriptionFavorite = (index) => {
+        bookExplanationInOut[index] = !bookExplanationInOut[index];
+
+        if (bookExplanationInOut[index]) {
+            bookExplanations.value[index] = savedBooks.value[index].description;
         } else {
             bookExplanations.value[index] = '';
         }
@@ -107,6 +116,7 @@ export default function () {
         savedBooks,
         searchBooks,
         toggleDescription,
+        toggleDescriptionFavorite,
         addFavorite,
     };
 }
