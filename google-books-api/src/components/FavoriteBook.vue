@@ -10,6 +10,13 @@ const {
   toggleDescriptionFavorite,
 } = booksSave();
 
+// お気に入りを消すメソッド
+const removeBookFavorite = (i) => {
+  // savedBooksを空にする
+  savedBooks.value.splice(i, 1);
+  localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
+};
+
 // アプリケーション起動時にローカルストレージから検索履歴を読み込む
 onMounted(() => {
   // ローカルストレージから検索履歴を読み込み
@@ -49,7 +56,7 @@ onMounted(() => {
           <p v-if="book.pageCount">ページ: {{ book.pageCount }}</p>
           <!--本の説明-->
           <button class="btn" @click="toggleDescriptionFavorite(i)">本の説明</button>
-          <button class="btn-favorite-out">お気に入りから削除</button>
+          <button class="btn-favorite-out" @click="removeBookFavorite(i)">お気に入りから削除</button>
           <p
             class="explanation"
             v-if="bookExplanationInOut && bookExplanations[i]"

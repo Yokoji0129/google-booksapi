@@ -74,8 +74,7 @@ export default function () {
         // 本が入っていない場合追加
         if (!isAlreadyFavorite) {
             // 本の説明を含めて保存
-            const bookToAdd = { ...selectedBook, description: selectedBook.description || "" };
-            savedBooks.value.unshift(bookToAdd);
+            savedBooks.value.unshift(selectedBook);
             localStorage.setItem("savedBooks", JSON.stringify(savedBooks.value));
         }
         // 同じ本を追加しようとした場合
