@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export default function () {
     const searchWord = ref(''); // ユーザーの検索語
-    const books = ref([]); // 本の情報を入れる配列
+    const books = ref([]); // 検索時の本の情報を入れる配列
     const bookExplanations = ref([]); // 本の説明を配列で管理
     const bookExplanationInOut = ref([]); // 各本の説明表示を管理
     const savedBooksWord = ref([]); // 検索語格納(検索履歴)

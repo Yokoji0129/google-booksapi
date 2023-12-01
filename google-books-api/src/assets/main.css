@@ -144,6 +144,10 @@ img {
     margin: 0 10px 0 0;
 }
 
+.btn:hover{
+    background-color: rgb(117, 74, 11);
+}
+
 .btn-favorite {
     border: none;
     font-size: 16px;
@@ -153,6 +157,10 @@ img {
     padding: 5px 10px;
     box-shadow: 2px 2px 4px gray;
     cursor: pointer;
+}
+
+.btn-favorite:hover {
+    background-color: rgb(69, 146, 43);
 }
 
 .btn-favorite-out {
@@ -166,6 +174,10 @@ img {
     cursor: pointer;
 }
 
+.btn-favorite-out:hover {
+    background-color: rgb(138, 66, 37);
+}
+
 .title_btn {
     border: none;
     background-color: rgb(163, 101, 8);
@@ -177,7 +189,7 @@ img {
 
 .title_btn:hover {
     background-color: rgb(163, 117, 47);
-    transform: scale(1.1, 1.1);
     border-radius: 10px;
+    transform: scale(1.1, 1.1);
     transition: .2s;
 }
